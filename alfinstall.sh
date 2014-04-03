@@ -15,7 +15,7 @@ export BASE_DOWNLOAD=https://raw.github.com/loftuxab/alfresco-ubuntu-install/mas
 export KEYSTOREBASE=http://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/HEAD/root/projects/repository/config/alfresco/keystore
 
 #Change this to prefered locale to make sure it exists. This has impact on LibreOffice transformations
-export LOCALESUPPORT=sv_SE.utf8
+export LOCALESUPPORT=de_DE.utf8
 
 export TOMCAT_DOWNLOAD=ftp://ftp.sunet.se/pub/www/servers/apache/dist/tomcat/tomcat-7/v7.0.52/bin/apache-tomcat-7.0.52.tar.gz
 export XALAN=http://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/HEAD/root/projects/3rd-party/lib/xalan-2.7.0/
