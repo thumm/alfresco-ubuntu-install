@@ -17,12 +17,12 @@ export KEYSTOREBASE=http://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/
 #Change this to prefered locale to make sure it exists. This has impact on LibreOffice transformations
 export LOCALESUPPORT=de_DE.utf8
 
-export TOMCAT_DOWNLOAD=ftp://ftp.sunet.se/pub/www/servers/apache/dist/tomcat/tomcat-7/v7.0.52/bin/apache-tomcat-7.0.52.tar.gz
+export TOMCAT_DOWNLOAD=ftp://ftp.sunet.se/pub/www/servers/apache/dist/tomcat/tomcat-7/v7.0.53/bin/apache-tomcat-7.0.53.tar.gz
 export XALAN=http://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/HEAD/root/projects/3rd-party/lib/xalan-2.7.0/
 export JDBCPOSTGRESURL=http://jdbc.postgresql.org/download
 export JDBCPOSTGRES=postgresql-9.3-1100.jdbc4.jar
 export JDBCMYSQLURL=http://ftp.sunet.se/pub/unix/databases/relational/mysql/Downloads/Connector-J
-export JDBCMYSQL=mysql-connector-java-5.1.28.tar.gz
+export JDBCMYSQL=mysql-connector-java-5.1.30.tar.gz
 
 export LIBREOFFICE=http://ftp.sunet.se/pub/Office/tdf/libreoffice/stable/4.2.2/deb/x86_64/LibreOffice_4.2.2_Linux_x86-64_deb.tar.gz
 export SWFTOOLS=http://www.swftools.org/swftools-2013-04-09-1007.tar.gz
