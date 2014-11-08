@@ -9,9 +9,9 @@ export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64/"
 export JRE_HOME=$JAVA_HOME/jre
 export PATH=$PATH:$HOME/bin:$JRE_HOME/bin
 export ALF_HOME=/opt/alfresco
-export CATALINA_HOME=$ALF_HOME/tomcat
+export CATALINA_HOME=/var/lib/tomcat7
 export CATALINA_PID="${ALF_HOME}/tomcat.pid"
-export USER=alfresco
+export USER=tomcat7
 
 cd $ALF_HOME/addons
 
@@ -77,51 +77,39 @@ fi
 copy(){
 	echo "------------------------"
 	echo "Copying new war files..."
-        SHUTDOWN_PORT=`netstat -vatn|grep LISTEN|grep 8005|wc -l`
-        export JAVA_HOME=$JAVA_HOME
-        if [ $SHUTDOWN_PORT -ne 0 ]; then
-            echo "Alfresco is started, cannot copy while started"
-        else
-            if [ -e $CATALINA_PID ]; then
-				echo "The process id file ${CATALINA_PID} exist even if Alfresco is not started."
-				echo "This can happen with an unexpected shutdown or if you run this startup script twice before tomcat is fully started."
-				echo "You need to manually remove this file if you are shure Alfresco tomcat is not running before copying again."
-			else
-				if [ -e $CATALINA_HOME/webapps/alfresco.war.old ]; then
-					rm $CATALINA_HOME/webapps/alfresco.war.old
-				fi
-				if [ -e alfresco.war ]; then
-					if [ -e $CATALINA_HOME/webapps/alfresco.war ]; then
-						echo "Backing up existing alfresco.war"
-						mv $CATALINA_HOME/webapps/alfresco.war $CATALINA_HOME/webapps/alfresco.war.old
-					fi
-					echo "Moving new alfresco.war to tomcat..."
-					mv alfresco.war $CATALINA_HOME/webapps/alfresco.war
-				fi
-				if [ -e $CATALINA_HOME/webapps/share.war.old ]; then
-					rm $CATALINA_HOME/webapps/share.war.old
-				fi
-				if [ -e share.war ]; then
-					if [ -e $CATALINA_HOME/webapps/share.war ]; then
-						echo "Backing up existing share.war"
-						mv $CATALINA_HOME/webapps/share.war $CATALINA_HOME/webapps/share.war.old
-					fi
-					echo "Moving new share.war to tomcat..."
-					mv share.war $CATALINA_HOME/webapps/share.war
-				fi
-				echo "Cleaning temporary Alfresco files from Tomcat..."
-				rm -rf ${CATALINA_HOME}/temp/Alfresco
-				rm -rf ${CATALINA_HOME}/work/Catalina/localhost
-				rm -rf ${CATALINA_HOME}/webapps/alfresco
-				rm -rf ${CATALINA_HOME}/webapps/share
-				echo "Restoring permissions on Tomcat"
-				chown -R ${USER}:nogroup ${CATALINA_HOME}
-            fi
-        fi
+        service tomcat7 stop
+	if [ -e $CATALINA_HOME/webapps/alfresco.war.old ]; then
+		rm $CATALINA_HOME/webapps/alfresco.war.old
+	fi
+	if [ -e alfresco.war ]; then
+		if [ -e $CATALINA_HOME/webapps/alfresco.war ]; then
+			echo "Backing up existing alfresco.war"
+			mv $CATALINA_HOME/webapps/alfresco.war $CATALINA_HOME/webapps/alfresco.war.old
+		fi
+		echo "Moving new alfresco.war to tomcat..."
+		mv alfresco.war $CATALINA_HOME/webapps/alfresco.war
+	fi
+	if [ -e $CATALINA_HOME/webapps/share.war.old ]; then
+		rm $CATALINA_HOME/webapps/share.war.old
+	fi
+	if [ -e share.war ]; then
+		if [ -e $CATALINA_HOME/webapps/share.war ]; then
+			echo "Backing up existing share.war"
+			mv $CATALINA_HOME/webapps/share.war $CATALINA_HOME/webapps/share.war.old
+		fi
+		echo "Moving new share.war to tomcat..."
+		mv share.war $CATALINA_HOME/webapps/share.war
+	fi
+	echo "Cleaning temporary Alfresco files from Tomcat..."
+	rm -rf ${CATALINA_HOME}/work/Alfresco
+	rm -rf ${CATALINA_HOME}/webapps/alfresco
+	rm -rf ${CATALINA_HOME}/webapps/share
+	echo "Restoring permissions on Tomcat"
+	chown -R ${USER}:${USER} ${CATALINA_HOME}
 }
 
 case "$1" in
-	amp)
+    amp)
     	amp
     	;;
     copy)

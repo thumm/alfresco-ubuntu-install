@@ -7,8 +7,9 @@
 # -------
 
 export ALF_HOME=/opt/alfresco
-export CATALINA_HOME=$ALF_HOME/tomcat
-export ALF_USER=alfresco
+export CATALINA_HOME=/usr/share/tomcat7
+export CATALINA_BASE=/var/lib/tomcat7
+export ALF_USER=tomcat7
 pushd $(dirname $0)
 export SCRIPT_DIR=$(pwd)
 export CURL_DIR="file://${SCRIPT_DIR}"
@@ -22,20 +23,16 @@ export KEYSTOREBASE=http://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/
 #Change this to prefered locale to make sure it exists. This has impact on LibreOffice transformations
 export LOCALESUPPORT=de_DE.utf8
 
-export TOMCAT_DOWNLOAD=http://apache.mirrors.spacedump.net/tomcat/tomcat-7/v7.0.55/bin/apache-tomcat-7.0.55.tar.gz
 export JDBCPOSTGRESURL=http://jdbc.postgresql.org/download
 export JDBCPOSTGRES=postgresql-9.3-1102.jdbc41.jar
-export JDBCMYSQLURL=http://cdn.mysql.com/Downloads/Connector-J
-export JDBCMYSQL=mysql-connector-java-5.1.33.tar.gz
 
 export LIBREOFFICE=http://download.documentfoundation.org/libreoffice/stable/4.2.6/deb/x86_64/LibreOffice_4.2.6-secfix_Linux_x86-64_deb.tar.gz
 export SWFTOOLS=http://www.swftools.org/swftools-2013-04-09-1007.tar.gz
 
-export ALFWARZIP=http://dl.alfresco.com/release/community/5.0.b-build-00092/alfresco-community-5.0.b-installer-linux-x64.bin
+export ALFWARZIP=http://dl.alfresco.com/release/community/5.0.b-build-00092/alfresco-community-5.0.b.zip
 export GOOGLEDOCSREPO=http://dl.alfresco.com/release/community/5.0.b-build-00092/alfresco-googledocs-repo-2.0.8.amp
 export GOOGLEDOCSSHARE=http://dl.alfresco.com/release/community/5.0.b-build-00092/alfresco-googledocs-share-2.0.8.amp
 export SOLR=https://artifacts.alfresco.com/nexus/service/local/repo_groups/public/content/org/alfresco/alfresco-solr/5.0.b/alfresco-solr-5.0.b-config.zip
-export SOLRWAR=https://artifacts.alfresco.com/nexus/service/local/repo_groups/public/content/org/alfresco/alfresco-solr/5.0.b/alfresco-solr-5.0.b.war
 export SPP=https://artifacts.alfresco.com/nexus/service/local/repo_groups/public/content/org/alfresco/alfresco-spp/5.0.b/alfresco-spp-5.0.b.amp
 
 # Color variables
@@ -83,7 +80,7 @@ echo
 
 URLERROR=0
 
-for REMOTE in $TOMCAT_DOWNLOAD $JDBCPOSTGRESURL/$JDBCPOSTGRES $JDBCMYSQLURL/$JDBCMYSQL \
+for REMOTE in $JDBCPOSTGRESURL/$JDBCPOSTGRES \
         $LIBREOFFICE $SWFTOOLS $ALFWARZIP $GOOGLEDOCSREPO $GOOGLEDOCSSHARE $SOLR $SPP
 
 do
@@ -146,8 +143,8 @@ echo "Read more at http://wiki.alfresco.com/wiki/Too_many_open_files"
 echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 read -e -p "Add limits.conf${ques} [y/n] " -i "n" updatelimits
 if [ "$updatelimits" = "y" ]; then
-  echo "alfresco  soft  nofile  8192" | sudo tee -a /etc/security/limits.conf
-  echo "alfresco  hard  nofile  65536" | sudo tee -a /etc/security/limits.conf
+  echo "tomcat7 soft  nofile  8192" | sudo tee -a /etc/security/limits.conf
+  echo "tomcat7 hard  nofile  65536" | sudo tee -a /etc/security/limits.conf
   echo
   echogreen "Updated limits.conf"
   echo
@@ -166,26 +163,21 @@ read -e -p "Install Tomcat${ques} [y/n] " -i "n" installtomcat
 
 if [ "$installtomcat" = "y" ]; then
   echogreen "Installing Tomcat"
-  echo "Downloading tomcat..."
-  curl -# -L -O $TOMCAT_DOWNLOAD
+  echo "Installing tomcat..."
+  sudo apt-get $APTVERBOSITY install tomcat7 tomcat7-admin
   # Make sure install dir exists
   sudo mkdir -p $ALF_HOME
-  echo "Extracting..."
-  tar xf "$(find . -type f -name "apache-tomcat*")"
-  sudo mv "$(find . -type d -name "apache-tomcat*")" $CATALINA_HOME
-  # Remove apps not needed
-  sudo rm -rf $CATALINA_HOME/webapps/*
   # Get Alfresco config
   echo "Downloading tomcat configuration files..."
-  sudo curl -# -o $CATALINA_HOME/conf/server.xml $CURL_DIR/tomcat/server.xml
-  sudo curl -# -o $CATALINA_HOME/conf/catalina.properties $CURL_DIR/tomcat/catalina.properties
+  sudo curl -# -o $CATALINA_BASE/conf/server.xml.alf $CURL_DIR/tomcat/server.xml
+  sudo curl -# -o $CATALINA_BASE/conf/catalina.properties.alf $CURL_DIR/tomcat/catalina.properties
   sudo curl -# -o /etc/init/alfresco.conf $CURL_DIR/tomcat/alfresco.conf
   sudo sed -i "s/@@LOCALESUPPORT@@/$LOCALESUPPORT/g" /etc/init/alfresco.conf
   # Create /shared
-  sudo mkdir -p $CATALINA_HOME/shared/classes/alfresco/extension
-  sudo mkdir -p $CATALINA_HOME/shared/classes/alfresco/web-extension
+  sudo mkdir -p $CATALINA_BASE/shared/classes/alfresco/extension
+  sudo mkdir -p $CATALINA_BASE/shared/classes/alfresco/web-extension
   # Add endorsed dir
-  sudo mkdir -p $CATALINA_HOME/endorsed
+  sudo mkdir -p $CATALINA_BASE/endorsed
   echo
   echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
   echo "You need to add the dns name, port and protocol for your server(s)."
@@ -207,7 +199,7 @@ if [ "$installtomcat" = "y" ]; then
   sed -i "s/@@ALFRESCO_SHARE_SERVER_PORT@@/$SHARE_PORT/g" $ALFRESCO_GLOBAL_PROPERTIES
   sed -i "s/@@ALFRESCO_SHARE_SERVER_PROTOCOL@@/$SHARE_PROTOCOL/g" $ALFRESCO_GLOBAL_PROPERTIES
   sed -i "s/@@ALFRESCO_REPO_SERVER@@/$REPO_HOSTNAME/g" $ALFRESCO_GLOBAL_PROPERTIES
-  sudo mv $ALFRESCO_GLOBAL_PROPERTIES $CATALINA_HOME/shared/classes/
+  sudo mv $ALFRESCO_GLOBAL_PROPERTIES $CATALINA_BASE/shared/classes/
 
   read -e -p "Install Share config file (recommended)${ques} [y/n] " -i "n" installshareconfig
   if [ "$installshareconfig" = "y" ]; then
@@ -215,7 +207,7 @@ if [ "$installtomcat" = "y" ]; then
     sudo curl -o $SHARE_CONFIG_CUSTOM $CURL_DIR/tomcat/share-config-custom.xml
     sed -i "s/@@ALFRESCO_SHARE_SERVER@@/$SHARE_HOSTNAME/g" $SHARE_CONFIG_CUSTOM
     sed -i "s/@@ALFRESCO_REPO_SERVER@@/$REPO_HOSTNAME/g" $SHARE_CONFIG_CUSTOM
-    sudo mv $SHARE_CONFIG_CUSTOM $CATALINA_HOME/shared/classes/alfresco/web-extension/
+    sudo mv $SHARE_CONFIG_CUSTOM $CATALINA_BASE/shared/classes/alfresco/web-extension/
   fi
 
   echo
@@ -227,13 +219,10 @@ if [ "$installtomcat" = "y" ]; then
   echo
   read -e -p "Install Mysql JDBC Connector${ques} [y/n] " -i "n" installmy
   if [ "$installmy" = "y" ]; then
-    cd /tmp/alfrescoinstall
-	curl -# -L -O $JDBCMYSQLURL/$JDBCMYSQL
-	tar xf $JDBCMYSQL
-	cd "$(find . -type d -name "mysql-connector*")"
-	sudo mv mysql-connector*.jar $CATALINA_HOME/lib
+    apt-get install $APTVERBOSITY libmysql-java
+    sudo ln -s /usr/share/java/mysql-connector-java.jar $CATALINA_HOME/lib
   fi
-  sudo chown -R $ALF_USER:$ALF_USER $CATALINA_HOME
+  sudo chown -R $ALF_USER:$ALF_USER $CATALINA_BASE
   echo
   echogreen "Finished installing Tomcat"
   echo
@@ -521,10 +510,9 @@ read -e -p "Install Solr indexing engine${ques} [y/n] " -i "n" installsolr
 if [ "$installsolr" = "y" ]; then
 
   sudo mkdir -p $ALF_HOME/solr
-  sudo mkdir -p $CATALINA_HOME/conf/Catalina/localhost
   sudo curl -# -o $ALF_HOME/solr/solr.zip $SOLR
-  sudo curl -# -o $ALF_HOME/solr/apache-solr-1.4.1.war $SOLRWAR
-  sudo curl -# -o $CATALINA_HOME/conf/tomcat-users.xml $CURL_DIR/tomcat/tomcat-users.xml
+  sudo cp $ALF_HOME/addons/war/apache-solr-1.4.1.war $ALF_HOME/solr/apache-solr-1.4.1.war
+  sudo curl -# -o $CATALINA_BASE/conf/tomcat-users.xml.alf $CURL_DIR/tomcat/tomcat-users.xml
   cd $ALF_HOME/solr/
 
   sudo unzip -q solr.zip
@@ -545,7 +533,7 @@ if [ "$installsolr" = "y" ]; then
   echo "<Context docBase=\"$ALF_HOME/solr/apache-solr-1.4.1.war\" debug=\"0\" crossContext=\"true\">" >> /tmp/alfrescoinstall/solr.xml
   echo "  <Environment name=\"solr/home\" type=\"java.lang.String\" value=\"$ALF_HOME/solr\" override=\"true\"/>" >> /tmp/alfrescoinstall/solr.xml
   echo "</Context>" >> /tmp/alfrescoinstall/solr.xml
-  sudo mv /tmp/alfrescoinstall/solr.xml $CATALINA_HOME/conf/Catalina/localhost/solr.xml
+  sudo mv /tmp/alfrescoinstall/solr.xml $CATALINA_BASE/conf/Catalina/localhost/solr.xml
 
   # Remove some unused stuff
   sudo rm $ALF_HOME/solr/solr.zip
@@ -578,7 +566,7 @@ echo "   Alfresco runs best with lots of memory. Add some more to \"lots\" and y
 echo "   Match the locale LC_ALL (or remove) setting to the one used in this script."
 echo "   Locale setting is needed for LibreOffice date handling support."
 echo "3. Update database and other settings in alfresco-global.properties"
-echo "   You will find this file in $CATALINA_HOME/shared/classes"
+echo "   You will find this file in $CATALINA_BASE/shared/classes"
 echo "4. Update cpu settings in $ALF_HOME/scripts/limitconvert.sh if you have more than 2 cores."
 echo "5. Start nginx if you have installed it: /etc/init.d/nginx start"
 echo "6. Start Alfresco/tomcat: sudo service alfresco start"
