@@ -167,12 +167,6 @@ if [ "$installtomcat" = "y" ]; then
   sudo apt-get $APTVERBOSITY install tomcat7 tomcat7-admin
   # Make sure install dir exists
   sudo mkdir -p $ALF_HOME
-  # Get Alfresco config
-  echo "Downloading tomcat configuration files..."
-  sudo curl -# -o $CATALINA_BASE/conf/server.xml.alf $CURL_DIR/tomcat/server.xml
-  sudo curl -# -o $CATALINA_BASE/conf/catalina.properties.alf $CURL_DIR/tomcat/catalina.properties
-  sudo curl -# -o /etc/init/alfresco.conf $CURL_DIR/tomcat/alfresco.conf
-  sudo sed -i "s/@@LOCALESUPPORT@@/$LOCALESUPPORT/g" /etc/init/alfresco.conf
   # Create /shared
   sudo mkdir -p $CATALINA_BASE/shared/classes/alfresco/extension
   sudo mkdir -p $CATALINA_BASE/shared/classes/alfresco/web-extension
@@ -385,6 +379,8 @@ echo
 echoblue "Adding basic support files. Always installed if not present."
 echo
 # Always add the addons dir and scripts
+  sudo mkdir -p /var/log/alfresco
+  sudo chown -R tomcat7:tomcat7 /var/log/alfresco
   sudo mkdir -p $ALF_HOME/addons/war
   sudo mkdir -p $ALF_HOME/addons/share
   sudo mkdir -p $ALF_HOME/addons/alfresco
@@ -512,7 +508,6 @@ if [ "$installsolr" = "y" ]; then
   sudo mkdir -p $ALF_HOME/solr
   sudo curl -# -o $ALF_HOME/solr/solr.zip $SOLR
   sudo cp $ALF_HOME/addons/war/apache-solr-1.4.1.war $ALF_HOME/solr/apache-solr-1.4.1.war
-  sudo curl -# -o $CATALINA_BASE/conf/tomcat-users.xml.alf $CURL_DIR/tomcat/tomcat-users.xml
   cd $ALF_HOME/solr/
 
   sudo unzip -q solr.zip
