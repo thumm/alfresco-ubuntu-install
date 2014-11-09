@@ -444,6 +444,11 @@ echo
     sudo curl -# -o $ALF_HOME/alf_data/keystore/ssl.truststore $KEYSTOREBASE/ssl.truststore
   fi
 
+  echo "Downloading tomcat configuration..."
+  sudo curl -o $CATALINA_BASE/conf/catalina.properties $CURL_DIR/etc/tomcat7/catalina.properties
+  sudo curl -o $CATALINA_BASE/conf/server.xml $CURL_DIR/etc/tomcat7/server.xml
+  sudo curl -o $CATALINA_BASE/conf/tomcat-users.xml $CURL_DIR/etc/tomcat7/tomcat-users.xml
+
 echo
 echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 echo "Install Alfresco war files."
