@@ -385,11 +385,37 @@ if [ "$installwar" = "y" ]; then
     sudo mv alfresco-spp*.amp $ALF_HOME/addons/alfresco/
   fi
 
+  mkdir -p /tmp/alfrescoinstall/amp/alfresco/config
+  cp -a $SCRIPT_DIR/var/lib/tomcat7/webapps/alfresco/WEB-INF/classes/* /tmp/alfrescoinstall/amp/alfresco/config/
+  echo "module.id=xx.zuhause.alfresco.alfresco" > /tmp/alfrescoinstall/amp/alfresco/module.properties
+  echo "module.version=1.0.0" >> /tmp/alfrescoinstall/amp/alfresco/module.properties
+  echo "module.buildnumber=SNAPSHOT" >> /tmp/alfrescoinstall/amp/alfresco/module.properties
+  echo "module.title=Alfresco Anpassungen" >> /tmp/alfrescoinstall/amp/alfresco/module.properties
+  echo "module.description=Alfresco Anpassungen" >> /tmp/alfrescoinstall/amp/alfresco/module.properties
+  echo "module.repo.version.min=4.2.0" >> /tmp/alfrescoinstall/amp/alfresco/module.properties
+  cd /tmp/alfrescoinstall/amp/alfresco
+  zip -r $ALF_HOME/addons/alfresco/myalfresco.amp .
+
+  mkdir -p /tmp/alfrescoinstall/amp/share/config
+  cp -a $SCRIPT_DIR/var/lib/tomcat7/webapps/share/WEB-INF/classes/* /tmp/alfrescoinstall/amp/share/config/
+  echo "module.id=xx.zuhause.alfresco.share" > /tmp/alfrescoinstall/amp/share/module.properties
+  echo "module.version=1.0.0" >> /tmp/alfrescoinstall/amp/share/module.properties
+  echo "module.buildnumber=SNAPSHOT" >> /tmp/alfrescoinstall/amp/share/module.properties
+  echo "module.title=Alfresco share Anpassungen" >> /tmp/alfrescoinstall/amp/share/module.properties
+  echo "module.description=Alfresco share Anpassungen" >> /tmp/alfrescoinstall/amp/share/module.properties
+  echo "module.repo.version.min=4.2.0" >> /tmp/alfrescoinstall/amp/share/module.properties
+  cd /tmp/alfrescoinstall/amp/share
+  zip -r $ALF_HOME/addons/share/myshare.amp .
+
+  rm -rf /tmp/alfrescoinstall/amp
+
   sudo $ALF_HOME/addons/apply.sh all
 
   echo "Downloading alfresco configuration..."
   cd $SCRIPT_DIR
-  sudo cp -a etc var opt /
+  sudo cp -a etc opt /
+  sudo cp -a var/lib/alfresco /var/lib
+  sudo cp -a var/lib/tomcat7/shared /var/lib/tomcat7
 
   echo
   echogreen "Finished adding Alfresco war files"
