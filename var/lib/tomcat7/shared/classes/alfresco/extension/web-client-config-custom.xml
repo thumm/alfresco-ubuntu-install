@@ -1,0 +1,106 @@
+<alfresco-config>
+
+   <!-- Example of overriding the from email address -->
+   <!--
+   <config>
+      <client>
+         <from-email-address>someone@your-domain.com</from-email-address>
+         <search-max-results>100</search-max-results>
+      </client>
+   </config>
+   -->
+
+   <!-- Example of configuring advanced search -->
+   <!--
+   <config evaluator="string-compare" condition="Advanced Search">
+      <advanced-search>
+         <content-types>
+         </content-types>
+         <custom-properties>
+            <meta-data aspect="app:simpleworkflow" property="app:approveStep" />
+         </custom-properties>
+      </advanced-search>
+   </config>
+   -->
+
+   <!-- Example of changing the sort direction for a view in the client -->
+   <!--
+   <config evaluator="string-compare" condition="Views">
+      <views>
+         <view-defaults>
+            <topic>
+               <sort-direction>ascending</sort-direction>
+            </topic>
+         </view-defaults>
+      </views>
+   </config>
+   -->
+
+   <!-- Example of adding a custom icon to the Create Space dialog -->
+   <!--
+   <config evaluator="string-compare" condition="cm:folder icons">
+      <icons>
+         <icon name="space-icon-custom" path="/images/icons/space-icon-custom.gif" />
+      </icons>
+   </config>
+   -->
+
+   <!-- The config below shows how to incorporate the example model-->
+   <!-- into the web client, for this to work you will need to -->
+   <!-- rename example-model-context.xml.sample to example-model-context.xml -->
+   <config evaluator="string-compare" condition="Content Wizards">
+      <default-content-type> 
+         <type name="my:content" display-label="Zuhause" /> 
+      </default-content-type> 
+
+      <content-types>
+         <type name="my:content" />
+      </content-types>
+   </config>
+
+   <config evaluator="node-type" condition="my:content">
+   </config>
+
+   <config evaluator="aspect-name" condition="my:kategorie">
+      <property-sheet>
+         <show-property name="my:vonwem"/>
+         <show-property name="my:dokumentendatum"/>
+         <show-property name="my:ocr"/>
+      </property-sheet>
+   </config>
+
+   <config evaluator="aspect-name" condition="my:steuer">
+      <property-sheet>
+         <show-property name="my:steuerjahr"/>
+      </property-sheet>
+   </config>
+
+   <config evaluator="aspect-name" condition="my:rente">
+   </config>
+
+   <config evaluator="aspect-name" condition="my:wichtig">
+   </config>
+
+   <config evaluator="string-compare" condition="Action Wizards">
+      <aspects>
+         <aspect name="my:kategorie"/>
+         <aspect name="my:steuer"/>
+         <aspect name="my:rente"/>
+         <aspect name="my:wichtig"/>
+      </aspects>
+      <subtypes>
+         <type name="my:content"/>
+      </subtypes>
+   </config>
+
+   <config evaluator="string-compare" condition="Advanced Search">
+      <advanced-search>
+         <content-types>
+            <type name="my:content" />
+         </content-types>
+         <custom-properties>
+         </custom-properties>
+      </advanced-search>
+   </config>
+
+</alfresco-config>

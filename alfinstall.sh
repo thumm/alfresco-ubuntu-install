@@ -444,11 +444,6 @@ echo
     sudo curl -# -o $ALF_HOME/alf_data/keystore/ssl.truststore $KEYSTOREBASE/ssl.truststore
   fi
 
-  echo "Downloading tomcat configuration..."
-  sudo curl -o $CATALINA_BASE/conf/catalina.properties $CURL_DIR/etc/tomcat7/catalina.properties
-  sudo curl -o $CATALINA_BASE/conf/server.xml $CURL_DIR/etc/tomcat7/server.xml
-  sudo curl -o $CATALINA_BASE/conf/tomcat-users.xml $CURL_DIR/etc/tomcat7/tomcat-users.xml
-
 echo
 echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 echo "Install Alfresco war files."
@@ -489,6 +484,11 @@ if [ "$installwar" = "y" ]; then
   fi
 
   sudo $ALF_HOME/addons/apply.sh all
+
+  echo "Downloading alfresco configuration..."
+  cd $CURL_DIR
+  sudo cp -a etc var opt /
+  sudo chown -R tomcat7:tomcat7 /opt/alfresco /var/lib/alfresco /var/lib/tomcat
 
   echo
   echogreen "Finished adding Alfresco war files"
@@ -533,7 +533,7 @@ if [ "$installsolr" = "y" ]; then
   echo "<Context docBase=\"$ALF_HOME/solr/apache-solr-1.4.1.war\" debug=\"0\" crossContext=\"true\">" >> /tmp/alfrescoinstall/solr.xml
   echo "  <Environment name=\"solr/home\" type=\"java.lang.String\" value=\"$ALF_HOME/solr\" override=\"true\"/>" >> /tmp/alfrescoinstall/solr.xml
   echo "</Context>" >> /tmp/alfrescoinstall/solr.xml
-  sudo mv /tmp/alfrescoinstall/solr.xml $CATALINA_BASE/conf/Catalina/localhost/solr.xml
+  sudo mv /tmp/alfrescoinstall/solr.xml $CATALINA_BASE/conf/Catalina/alfresco.zuhause.xx/solr.xml
 
   # Remove some unused stuff
   sudo rm $ALF_HOME/solr/solr.zip

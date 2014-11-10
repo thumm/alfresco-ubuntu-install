@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="my:mymodel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+   <description>Model Thomas Schumm</description>
+   <author></author>
+   <version>1.0</version>
+
+   <imports>
+      <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d"/>
+      <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm"/>
+   </imports>
+
+   <namespaces>
+      <namespace uri="alfresco.zuhause.xx" prefix="my"/>
+   </namespaces>
+
+   <types>
+      <type name="my:content">
+         <title>My Content</title>
+         <parent>cm:content</parent>
+         <properties>
+            <property name="my:akte">
+               <type>d:long</type>
+               <mandatory>false</mandatory>
+               <index enabled="true">
+                  <atomic>true</atomic>
+                  <stored>false</stored>
+                  <tokenised>both</tokenised>
+               </index>
+            </property>
+            <property name="my:seiten">
+               <type>d:int</type>
+               <mandatory>false</mandatory>
+               <index enabled="true">
+                  <atomic>true</atomic>
+                  <stored>false</stored>
+                  <tokenised>both</tokenised>
+               </index>
+            </property>
+            <property name="my:needsOcr">
+               <title>Needs OCR</title>
+               <type>d:boolean</type>
+               <default>false</default>
+            </property>
+         </properties>
+         <mandatory-aspects>
+            <aspect>my:kategorie</aspect>
+            <aspect>cm:generalclassifiable</aspect>
+            <aspect>cm:taggable</aspect>
+         </mandatory-aspects>
+      </type>
+    </types>
+
+    <aspects>
+      <aspect name="my:kategorie">
+         <title>Kategorisierung von Dokumenten</title>
+         <properties>
+            <property name="my:vonwem">
+               <type>d:text</type>
+               <mandatory>false</mandatory>
+               <index enabled="true">
+                  <atomic>true</atomic>
+                  <stored>false</stored>
+                  <tokenised>both</tokenised>
+               </index>
+            </property>
+            <property name="my:dokumentendatum">
+               <type>d:date</type>
+               <mandatory enforced="false">true</mandatory>
+               <index enabled="true">
+                  <atomic>true</atomic>
+                  <stored>false</stored>
+                  <tokenised>both</tokenised>
+               </index>
+            </property>
+            <property name="my:ocr">
+               <type>d:content</type>
+               <mandatory>false</mandatory>
+               <index enabled="true">
+                  <atomic>true</atomic>
+                  <stored>false</stored>
+                  <tokenised>both</tokenised>
+               </index>
+            </property>
+         </properties>
+      </aspect>
+
+      <aspect name="my:steuer">
+         <title>Steuerrelevante Dokumente</title>
+         <properties>
+            <property name="my:steuerjahr">
+               <type>d:date</type>
+               <mandatory enforced="false">true</mandatory>
+               <index enabled="true">
+                  <atomic>true</atomic>
+                  <stored>false</stored>
+                  <tokenised>both</tokenised>
+               </index>
+            </property>
+         </properties>
+      </aspect>
+
+      <aspect name="my:rente">
+         <title>Rentenrelevante Dokumente</title>
+      </aspect>
+
+      <aspect name="my:wichtig">
+         <title>Wichtige Dokumente</title>
+      </aspect>
+
+   </aspects>
+</model>

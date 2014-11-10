@@ -1,0 +1,195 @@
+<alfresco-config>
+
+   <!-- Global config section -->
+   <config replace="true">
+      <flags>
+         <!-- Developer debugging setting to turn on DEBUG mode for client scripts in the browser -->
+         <client-debug>false</client-debug>
+         <!-- LOGGING can always be toggled at runtime when in DEBUG mode (Ctrl, Ctrl, Shift, Shift).
+              This flag automatically activates logging on page load -->
+         <client-debug-autologging>false</client-debug-autologging>
+      </flags>
+   </config>
+   
+   <config evaluator="string-compare" condition="WebFramework">
+      <web-framework>
+         <autowire>
+            <!-- Pick the mode: "production" or "development" -->
+            <mode>production</mode>
+         </autowire>
+      </web-framework>
+   </config>
+
+   <config evaluator="string-compare" condition="CSRFPolicy" replace="true">
+      <properties>
+         <token>Alfresco-CSRFToken</token>
+         <referer>https?:\/\/alfresco.zuhause.xx\/.*</referer>
+         <origin>https?:\/\/alfresco.zuhause.xx.*</origin>
+      </properties>
+   </config>
+   
+   <config evaluator="string-compare" condition="Remote">
+      <remote>
+         <endpoint>
+            <id>alfresco-noauth</id>
+            <name>Alfresco - unauthenticated access</name>
+            <description>Access to Alfresco Repository WebScripts that do not require authentication</description>
+            <connector-id>alfresco</connector-id>
+            <endpoint-url>http://alfresco.zuhause.xx:8080/alfresco/s</endpoint-url>
+            <identity>none</identity>
+         </endpoint>
+
+         <endpoint>
+            <id>alfresco</id>
+            <name>Alfresco - user access</name>
+            <description>Access to Alfresco Repository WebScripts that require user authentication</description>
+            <connector-id>alfresco</connector-id>
+            <endpoint-url>http://alfresco.zuhause.xx:8080/alfresco/s</endpoint-url>
+            <identity>user</identity>
+         </endpoint>
+
+         <endpoint>
+            <id>alfresco-feed</id>
+            <name>Alfresco Feed</name>
+            <description>Alfresco Feed - supports basic HTTP authentication via the EndPointProxyServlet</description>
+            <connector-id>http</connector-id>
+            <endpoint-url>http://alfresco.zuhause.xx:8080/alfresco/s</endpoint-url>
+            <basic-auth>true</basic-auth>
+            <identity>user</identity>
+         </endpoint>
+         
+         <endpoint>
+            <id>activiti-admin</id>
+            <name>Activiti Admin UI - user access</name>
+            <description>Access to Activiti Admin UI, that requires user authentication</description>
+            <connector-id>activiti-admin-connector</connector-id>
+            <endpoint-url>http://alfresco.zuhause.xx:8080/alfresco/activiti-admin</endpoint-url>
+            <identity>user</identity>
+         </endpoint>
+      </remote>
+   </config>
+
+   <config evaluator="string-compare" condition="DocumentLibrary">
+      <aspects>
+         <visible>
+            <aspect name="my:kategorie" />
+            <aspect name="my:steuer" />
+            <aspect name="my:rente" />
+            <aspect name="my:wichtig" />
+         </visible>
+      </aspects>
+
+      <types>
+         <type name="cm:content">
+           <subtype name="my:content" />
+         </type>
+      </types>
+
+      <repository-url>https://server.zuhause.xx/alfresco</repository-url>
+   </config>
+
+   <config evaluator="node-type" condition="my:content">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="cm:title" />
+               <show id="cm:categories" />
+               <show id="my:vonwem" />
+               <show id="my:dokumentendatum" />
+               <show id="my:akte" for-mode="view" />
+               <show id="my:seiten" for-mode="view" />
+
+               <show id="cm:creator" for-mode="view" />
+               <show id="cm:created" for-mode="view" />
+               <show id="cm:modifier" for-mode="view" />
+               <show id="cm:modified" for-mode="view" />
+            </field-visibility>
+            <appearance>
+               <set id="fs1" appearance="panel" label="Stammdaten" />
+               <field id="cm:title" set="fs1">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               </field>
+               <field id="cm:categories" set="fs1" />
+               <field id="my:vonwem" set="fs1" />
+               <field id="my:dokumentendatum" set="fs1" />
+               <field id="my:akte" set="fs1" />
+               <field id="my:seiten" set="fs1" />
+
+               <set id="fs4" appearance="pannel" template="/org/alfresco/components/form/2-column-set.ftl" label="Änderungsinformationen" />
+               <field id="cm:creator" index="1" set="fs4" />
+               <field id="cm:created" index="2" set="fs4" />
+               <field id="cm:modifier" index="3" set="fs4" />
+               <field id="cm:modified" index="4" set="fs4" />
+            </appearance>
+         </form>
+      </forms>
+   </config>
+
+   <config evaluator="model-type" condition="my:content">
+      <forms>
+         <form id="search">
+            <field-visibility>
+               <show id="cm:name" />
+               <show id="cm:title" />
+               <show id="my:vonwem" />
+               <show id="my:dokumentendatum" />
+               <show id="my:akte" />
+               <show id="my:seiten" />
+            </field-visibility>
+            <appearance>
+               <field id="cm:title">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               </field>
+               <field id="my:dokumentendatum">
+                  <control template="/org/alfresco/components/form/controls/daterange.ftl" />
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+
+   <config evaluator="aspect" condition="my:steuer">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="my:steuerjahr" />
+            </field-visibility>
+            <appearance>
+               <set id="steuer" appearance="panel" label="Steuerrelevant" />
+               <field id="my:steuerjahr" set="steuer" />
+            </appearance>
+         </form>
+      </forms>
+   </config>
+
+   <config evaluator="aspect" condition="my:rente">
+      <forms>
+         <form>
+            <appearance>
+               <set id="rente" appearance="title" label="Rentenrelevant" />
+            </appearance>
+         </form>
+      </forms>
+   </config>
+
+   <config evaluator="aspect" condition="my:wichtig">
+      <forms>
+         <form>
+            <appearance>
+               <set id="wichtig" appearance="panel" label="Wichtig" />
+            </appearance>
+         </form>
+      </forms>
+   </config>
+
+   <config replace="true" evaluator="string-compare" condition="AdvancedSearch">
+      <advanced-search>
+         <forms>
+            <form labelId="search.form.label.my_content" descriptionId="search.form.desc.my_content">my:content</form>
+            <form labelId="search.form.label.cm_content" descriptionId="search.form.desc.cm_content">cm:content</form>
+            <form labelId="search.form.label.cm_folder" descriptionId="search.form.desc.cm_folder">cm:folder</form>
+         </forms>
+      </advanced-search>
+   </config>
+
+</alfresco-config>
