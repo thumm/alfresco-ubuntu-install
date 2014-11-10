@@ -451,6 +451,22 @@ else
   echo
 fi
 
+echo
+echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+echo "Install alfresco webapp configuration."
+echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+read -e -p "Install alfresco webapp configuration${ques} [y/n] " -i "n" installwebconfig
+if [ "$installwebconfig" = "y" ]; then
+  cd $SCRIPT_DIR
+  sudo cp -a var/lib/tomcat7/webapps /var/lib/tomcat7
+  echogreen "Finished installing webapp configuration."
+else
+  echo
+  echo "Skipping installing Solr."
+  echo "You can always install Solr at a later time."
+  echo
+fi
+
 sudo chown -R $ALF_USER:$ALF_USER $ALF_HOME $ALF_LIB $CATALINA_BASE
 
 echo
