@@ -149,8 +149,6 @@ if [ "$installtomcat" = "y" ]; then
   sudo apt-get $APTVERBOSITY install tomcat7 tomcat7-admin
   echo
 
-  sudo service tomcat7 stop
-  echo
   sudo mkdir -p /etc/tomcat7/Catalina/alfresco.zuhause.xx
   sudo mv /etc/tomcat7/Catalina/localhost/* /etc/tomcat7/Catalina/alfresco.zuhause.xx
 
@@ -364,7 +362,7 @@ if [ "$installwar" = "y" ]; then
   mkdir -p /tmp/alfrescoinstall/war
   cd /tmp/alfrescoinstall/war
 
-  sudo apt-get $APTVERBOSITY install unzip zip
+  sudo apt-get $APTVERBOSITY install unzip
   echo "Downloading war files..."
   curl -# -o /tmp/alfrescoinstall/war/alfwar.zip $ALFWARZIP
   unzip -q -j alfwar.zip $(unzip -l alfwar.zip | grep "\.war" | cut -c 3- | cut -d " " -f 7)
@@ -410,7 +408,6 @@ if [ "$installwar" = "y" ]; then
   cd /tmp/alfrescoinstall/amp/share
   zip -r $ALF_HOME/addons/share/myshare.amp .
 
-  cd $SCRIPT_DIR
   rm -rf /tmp/alfrescoinstall/amp
 
   sudo $ALF_HOME/addons/apply.sh all
@@ -475,6 +472,22 @@ if [ "$installsolr" = "y" ]; then
   echored "You must manually update alfresco-global.properties."
   echo "Set property value index.subsystem.name=solr"
   echo
+else
+  echo
+  echo "Skipping installing Solr."
+  echo "You can always install Solr at a later time."
+  echo
+fi
+
+echo
+echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+echo "Install alfresco webapp configuration."
+echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+read -e -p "Install alfresco webapp configuration${ques} [y/n] " -i "n" installwebconfig
+if [ "$installwebconfig" = "y" ]; then
+  cd $SCRIPT_DIR
+  sudo cp -a var/lib/tomcat7/webapps /var/lib/tomcat7
+  echogreen "Finished installing webapp configuration."
 else
   echo
   echo "Skipping installing Solr."
