@@ -27,7 +27,7 @@ export LOCALESUPPORT=de_DE.utf8
 export JDBCPOSTGRESURL=http://jdbc.postgresql.org/download
 export JDBCPOSTGRES=postgresql-9.3-1102.jdbc41.jar
 
-export LIBREOFFICE=http://download.documentfoundation.org/libreoffice/stable/4.2.6/deb/x86_64/LibreOffice_4.2.6-secfix_Linux_x86-64_deb.tar.gz
+export LIBREOFFICE=http://download.documentfoundation.org/libreoffice/stable/4.2.7/deb/x86_64/LibreOffice_4.2.7_Linux_x86-64_deb.tar.gz
 export SWFTOOLS=http://www.swftools.org/swftools-2013-04-09-1007.tar.gz
 
 export ALFWARZIP=http://dl.alfresco.com/release/community/5.0.b-build-00092/alfresco-community-5.0.b.zip
