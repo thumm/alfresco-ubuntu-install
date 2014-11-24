@@ -387,6 +387,21 @@ if [ "$installwar" = "y" ]; then
     sudo mv alfresco-spp*.amp $ALF_HOME/addons/alfresco/
   fi
 
+  echo
+  echogreen "Finished adding Alfresco war files"
+  echo
+else
+  echo
+  echo "Skipping adding Alfresco war files"
+  echo
+fi
+
+echo
+echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+echo "Apply addons."
+echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+read -e -p "Apply addons${ques} [y/n] " -i "n" installaddons
+if [ "$installaddons" = "y" ]; then
   mkdir -p /tmp/alfrescoinstall/amp/alfresco/config
   cp -a $SCRIPT_DIR/var/lib/tomcat7/webapps/alfresco/WEB-INF/classes/* /tmp/alfrescoinstall/amp/alfresco/config/
   echo "module.id=xx.zuhause.alfresco.alfresco" > /tmp/alfrescoinstall/amp/alfresco/module.properties
@@ -409,23 +424,35 @@ if [ "$installwar" = "y" ]; then
   cd /tmp/alfrescoinstall/amp/share
   zip -r $ALF_HOME/addons/share/myshare.amp .
 
-  cd $SCRIPT_DIR
-  rm -rf /tmp/alfrescoinstall/amp
-
   sudo $ALF_HOME/addons/apply.sh all
 
-  echo "Downloading alfresco configuration..."
+  rm -rf /tmp/alfrescoinstall/amp
+
+  echo
+  echogreen "Finished applying addons"
+else
+  echo
+  echo "Skipping apply addons"
+  echo
+fi
+
+echo
+echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+echo "Copy personal configuration"
+echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+read -e -p "copy configuration${ques} [y/n] " -i "n" installpersonalconfig
+if [ "$installpersonalconfig" = "y" ]; then
+  echo "Coping alfresco configuration..."
   cd $SCRIPT_DIR
   sudo cp -a etc opt /
   sudo cp -a var/lib/alfresco /var/lib
   sudo cp -a var/lib/tomcat7/shared /var/lib/tomcat7
 
   echo
-  echogreen "Finished adding Alfresco war files"
-  echo
+  echogreen "Finished personal configuration"
 else
   echo
-  echo "Skipping adding Alfresco war files"
+  echo "Skipping personal configuration"
   echo
 fi
 

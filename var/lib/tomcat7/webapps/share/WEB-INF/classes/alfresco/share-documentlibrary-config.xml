@@ -468,7 +468,7 @@
                   <css src="components/documentlibrary/documentlist-view-table.css" />
                </dependencies>
                <json-config>
-                  { 
+                  {  
                      "actions": {
                         "show": "true"
                      },
@@ -482,37 +482,37 @@
                         "show": "true"
                      },
                      "propertyColumns": [
-                        { 
+                        {  
                            "property": "name",
                            "label": "label.name",
                            "width": "100"
                         },
-                        { 
+                        {  
                            "property": "cm:title",
                            "label": "label.title"
                         },
-                        { 
+                        {  
                            "property": "categories",
                            "label": "mytable.table.label.categories"
                         },
-                        { 
+                        {
                            "property": "my:dokumentendatum",
                            "label": "mytable.table.label.dokumentendatum"
                         },
-                        { 
+                        {
                            "property": "my:vonwem",
                            "label": "mytable.table.label.vonwem"
                         },
-                        { 
+                        {
                            "property": "my:seiten",
                            "label": "mytable.table.label.seiten"
                         },
-                        { 
+                        {
                            "property": "my:steuerjahr",
                            "label": "mytable.table.label.steuerjahr"
                         }
                      ]
-                  }
+                 }
                </json-config>
             </view-renderer>
          </view-renderers>
@@ -567,7 +567,6 @@
             <aspect name="emailserver:aliasable" />
             <aspect name="cm:taggable" />
             <aspect name="app:inlineeditable" />
-            <aspect name="gd:googleEditable" />
             <aspect name="cm:geographic" />
             <aspect name="exif:exif" />
             <aspect name="audio:audio" />
@@ -620,31 +619,11 @@
 
       <!--
          If set, will present a WebDAV link for the current item on the Document and Folder details pages.
-         Also used to generate the "View in Alfresco Explorer" action for folders.
       -->
       <!--
       <repository-url>http://localhost:8080/alfresco</repository-url>
       -->
 
-      <!--
-         Google Docs??? integration
-      -->
-      <google-docs>
-         <!--
-            Google Docs UI integration is now toggled by the respective subsystem state within the Repository.
-         -->
-         
-         <!--
-            The mimetypes of documents Google Docs allows you to create via the Share interface.
-            The I18N label is created from the "type" attribute, e.g. google-docs.doc=Google Docs&trade; Document
-         -->
-         <creatable-types>
-            <creatable type="doc">application/vnd.openxmlformats-officedocument.wordprocessingml.document</creatable>
-            <creatable type="xls">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</creatable>
-            <creatable type="ppt">application/vnd.ms-powerpoint</creatable>
-         </creatable-types>
-      </google-docs>
-      
       <!--
          File upload configuration
       -->
@@ -729,21 +708,6 @@
             <evaluator>evaluator.doclib.indicator.nodeLocked</evaluator>
             <labelParam index="0">{jsNode.properties.cm_lockOwner.displayName}</labelParam>
             <labelParam index="1">{jsNode.properties.cm_lockOwner.userName}</labelParam>
-            <override>locked</override>
-         </indicator>
-         <!-- Google Docs Editing -->
-         <indicator id="google-docs-editing" index="10">
-            <evaluator>evaluator.doclib.indicator.googleDocsEditing</evaluator>
-            <override>editing</override>
-         </indicator>
-         <indicator id="google-docs-owner" index="10">
-            <evaluator>evaluator.doclib.indicator.googleDocsOwner</evaluator>
-            <override>lock-owner</override>
-         </indicator>
-         <indicator id="google-docs-locked" index="10">
-            <evaluator>evaluator.doclib.indicator.googleDocsLocked</evaluator>
-            <labelParam index="0">{jsNode.properties.owner.displayName}</labelParam>
-            <labelParam index="1">{jsNode.properties.owner.userName}</labelParam>
             <override>locked</override>
          </indicator>
          <!-- Workflows -->
@@ -879,7 +843,7 @@
          <action type="action-link" id="onActionCopyTo" icon="document-copy-to" label="menu.selected-items.copy" />
          <action type="action-link" id="onActionMoveTo" icon="document-move-to" permission="Delete" label="menu.selected-items.move"/>
          <action type="action-link" id="onActionAssignWorkflow" asset="document" icon="document-assign-workflow" label="menu.selected-items.assign-workflow"/>
-         <action type="action-link" id="onActionDelete" icon="document-delete" permission="Delete" label="menu.selected-items.delete" notAspect="hwf:hybridWorkflow" />
+         <action type="action-link" id="onActionDelete" icon="document-delete" permission="Delete" label="menu.selected-items.delete" notAspect="hwf:hybridWorkflow,sys:undeletable" />
          <action type="action-link" id="onActionCloudSync" asset="document" icon="document-cloud-sync"  permission="CreateChildren" label="menu.selected-items.cloudSync" notAspect="sync:syncSetMemberNode" syncMode="ON_PREMISE" />
          <action type="action-link" id="onActionCloudSyncRequest" icon="document-request-sync" label="menu.selected-items.cloudRequestSync" hasAspect="sync:syncSetMemberNode" syncMode="ON_PREMISE" />
       </multi-select>
@@ -958,7 +922,7 @@
             <permissions>
                <permission allow="true">Write</permission>
             </permissions>
-            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.checkedOutAspect</evaluator>
          </action>
 
          <!-- Edit properties page -->
@@ -967,7 +931,7 @@
             <permissions>
                <permission allow="true">Write</permission>
             </permissions>
-            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.checkedOutAspect</evaluator>
          </action>
 
          <!-- Approve simple workflow -->
@@ -1085,6 +1049,19 @@
             <evaluator>evaluator.doclib.action.onlineEdit</evaluator>
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isAosOnlineEditAvailable</evaluator>
+         </action>
+
+         <!-- Edit online AOS -->
+         <action id="document-edit-online-aos" type="javascript" label="actions.document.edit-online" icon="document-edit-online">
+            <param name="function">onActionEditOnlineAos</param>
+            <permissions>
+               <permission allow="true">Write</permission>
+            </permissions>
+            <evaluator>evaluator.doclib.action.isAosOnlineEditAvailable</evaluator>
+            <evaluator>evaluator.doclib.action.notEditBrowser</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isLockedForAos</evaluator>
+            <evaluator>evaluator.doclib.action.isMimetypeEditableAos</evaluator>
          </action>
 
          <!-- Edit offline -->
@@ -1100,7 +1077,7 @@
          <!-- Copy to -->
          <action id="document-copy-to" type="javascript" label="actions.document.copy-to">
             <param name="function">onActionCopyTo</param>
-            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
          </action>
 
          <!-- Move to -->
@@ -1109,7 +1086,7 @@
             <permissions>
                <permission allow="true">Delete</permission>
             </permissions>
-            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
          </action>
 
          <!-- Delete -->
@@ -1118,8 +1095,9 @@
             <permissions>
                <permission allow="true">Delete</permission>
             </permissions>
-            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator>evaluator.doclib.action.isNotPartOfHybridWorklfow</evaluator>
+            <evaluator>evaluator.doclib.action.isDeletable</evaluator>
          </action>
 
          <!-- Assign workflow -->
@@ -1207,40 +1185,6 @@
             </permissions>
          </action>
 
-         <!-- View in Explorer client -->
-         <action id="view-in-explorer" type="link" label="actions.folder.explorer-view">
-            <param name="href">{explorerViewUrl}</param>
-            <param name="target">_blank</param>
-            <!-- repository-url config set, not in portlet mode -->
-            <evaluator>evaluator.doclib.action.viewInExplorer</evaluator>
-         </action>
-
-         <!-- Checkout to Google Docs -->
-         <action id="document-checkout-to-googledocs" type="javascript" label="actions.document.checkout-google">
-            <param name="function">onActionCheckoutToGoogleDocs</param>
-            <permissions>
-               <permission allow="true">Write</permission>
-            </permissions>
-            <!-- gd:googleEditable -->
-            <evaluator>evaluator.doclib.action.googleDocsCheckOut</evaluator>
-         </action>
-
-         <!-- Checkin from Google Docs -->
-         <action id="document-checkin-from-googledocs" type="javascript" label="actions.document.checkin-google">
-            <param name="function">onActionCheckinFromGoogleDocs</param>
-            <!-- gd:googleResource, cm:workingcopy & cm:workingCopyOwner = currentUser OR cm:checkedOut, cm:lockOwner = currentUser -->
-            <evaluator>evaluator.doclib.action.googleDocsCheckIn</evaluator>
-            <override>document-checkout-to-googledocs</override>
-         </action>
-
-         <!-- View in Google Docs -->
-         <action id="document-view-googledoc" type="link" icon="document-view-content" label="actions.document.view-google-doc">
-            <param name="href">{workingCopy.googleDocUrl}</param>
-            <param name="target">_blank</param>
-            <!-- gd:googleResource -->
-            <evaluator>evaluator.doclib.action.googleDocsView</evaluator>
-         </action>
-
          <!-- View on Google Maps -->
          <action id="document-view-googlemaps" type="pagelink" label="actions.document.view-google-map">
             <param name="page">geographic-map?nodeRef={node.nodeRef}</param>
@@ -1253,14 +1197,8 @@
             <!-- calculated from siteId, item.location.repositoryId, replicationUrlMapping from share-config-custom.xml and node.type -->
             <param name="href">{sourceRepositoryUrl}</param>
             <param name="target">_blank</param>
-            <!-- aspect trx:transferred, not portlet mode -->
+            <!-- aspect trx:transferred -->
             <evaluator>evaluator.doclib.action.transferred</evaluator>
-         </action>
-         
-         <!-- Publish document -->
-         <action id="document-publish" type="javascript" label="actions.document.publish">
-            <param name="function">onActionPublish</param>
-            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
          </action>
 
          <!-- Cloud Sync: Create -->
@@ -1326,10 +1264,8 @@
             <action index="180" id="document-reject" />
             <action index="190" id="document-inline-edit" />
             <action index="200" id="document-edit-online" />
+            <action index="201" id="document-edit-online-aos" />
             <action index="210" id="document-edit-offline" />
-            <action index="220" id="document-view-googledoc" />
-            <action index="230" id="document-checkout-to-googledocs" />
-            <action index="240" id="document-checkin-from-googledocs" />
             <action index="250" id="document-copy-to" />
             <action index="260" id="document-move-to" />
             <action index="270" id="document-delete" />
@@ -1337,7 +1273,7 @@
             <action index="290" id="document-cancel-editing" />
             <action index="295" id="document-cancel-editing-unlock" icon="document-cancel-editing"/>
             <action index="297" id="document-manage-granular-permissions" />
-            <action index="300" id="document-publish" />
+            <action index="298" id="document-manage-repo-permissions" />
             <action index="310" id="document-view-googlemaps" />
             <action index="320" id="document-view-in-source-repository" />
             <action index="330" id="document-cloud-sync" />
@@ -1357,10 +1293,8 @@
             <action index="170" id="document-reject" />
             <action index="180" id="document-inline-edit" />
             <action index="190" id="document-edit-online" />
+            <action index="191" id="document-edit-online-aos" />
             <action index="200" id="document-edit-offline" />
-            <action index="210" id="document-view-googledoc" />
-            <action index="220" id="document-checkout-to-googledocs" />
-            <action index="230" id="document-checkin-from-googledocs" />
             <action index="240" id="document-copy-to" />
             <action index="250" id="document-move-to" />
             <action index="260" id="document-delete" />
@@ -1372,7 +1306,6 @@
             <action index="310" id="document-manage-aspects" />
             <action index="320" id="document-change-type" />
             <action index="330" id="document-view-in-source-repository" />
-            <action index="340" id="document-publish" />
             <action index="350" id="document-view-googlemaps" />
             <action index="360" id="document-cloud-sync" />
             <action index="370" id="document-cloud-unsync" />
@@ -1415,7 +1348,6 @@
             <action index="180" id="document-manage-repo-permissions" icon="folder-manage-permissions" label="actions.folder.manage-permissions" />
             <action index="190" id="document-manage-aspects" label="actions.folder.manage-aspects" />
             <action index="200" id="document-change-type" label="actions.folder.change-type" />
-            <action index="210" id="view-in-explorer" />
             <action index="220" id="document-view-in-source-repository" label="actions.folder.view-source-repository" />
             <action index="350" id="document-view-googlemaps" />
             <action index="360" id="document-cloud-sync" />
