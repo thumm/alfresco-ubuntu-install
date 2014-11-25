@@ -92,34 +92,25 @@
       <forms>
          <form>
             <field-visibility>
+               <show id="cm:name" />
                <show id="cm:title" />
-               <show id="cm:categories" />
                <show id="my:vonwem" />
                <show id="my:dokumentendatum" />
+               <show id="cm:categories" />
                <show id="my:akte" for-mode="view" />
                <show id="my:seiten" for-mode="view" />
-
-               <show id="cm:creator" for-mode="view" />
-               <show id="cm:created" for-mode="view" />
-               <show id="cm:modifier" for-mode="view" />
-               <show id="cm:modified" for-mode="view" />
             </field-visibility>
             <appearance>
                <set id="fs1" appearance="panel" label="Stammdaten" />
+               <field id="cm:name" set="fs1" />
                <field id="cm:title" set="fs1">
                   <control template="/org/alfresco/components/form/controls/textfield.ftl" />
                </field>
-               <field id="cm:categories" set="fs1" />
                <field id="my:vonwem" set="fs1" />
                <field id="my:dokumentendatum" set="fs1" />
+               <field id="cm:categories" label-id="mytable.table.label.categories" set="fs1" />
                <field id="my:akte" set="fs1" />
                <field id="my:seiten" set="fs1" />
-
-               <set id="fs4" appearance="pannel" template="/org/alfresco/components/form/2-column-set.ftl" label="Änderungsinformationen" />
-               <field id="cm:creator" index="1" set="fs4" />
-               <field id="cm:created" index="2" set="fs4" />
-               <field id="cm:modifier" index="3" set="fs4" />
-               <field id="cm:modified" index="4" set="fs4" />
             </appearance>
          </form>
       </forms>
