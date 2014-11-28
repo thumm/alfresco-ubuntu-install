@@ -146,7 +146,7 @@
                <show id="my:steuerjahr" />
             </field-visibility>
             <appearance>
-               <set id="steuer" appearance="panel" label="Steuerrelevant" />
+               <set id="steuer" appearance="panel" label="Steuer" />
                <field id="my:steuerjahr" set="steuer" />
             </appearance>
          </form>
@@ -156,8 +156,12 @@
    <config evaluator="aspect" condition="my:rente">
       <forms>
          <form>
+            <field-visibility>
+               <show id="my:isRente" />
+            </field-visibility>
             <appearance>
-               <set id="rente" appearance="title" label="Rentenrelevant" />
+               <set id="rente" appearance="panel" label="Rente" />
+               <field id="my:isRente" label="rentenrelevant" set="rente" />
             </appearance>
          </form>
       </forms>
@@ -166,8 +170,12 @@
    <config evaluator="aspect" condition="my:wichtig">
       <forms>
          <form>
+            <field-visibility>
+               <show id="my:isImportant" />
+            </field-visibility>
             <appearance>
                <set id="wichtig" appearance="panel" label="Wichtig" />
+               <field id="my:isImportant" label="wichtig" set="wichtig" />
             </appearance>
          </form>
       </forms>

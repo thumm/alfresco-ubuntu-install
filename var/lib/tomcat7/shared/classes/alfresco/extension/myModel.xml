@@ -73,7 +73,7 @@
                </index>
             </property>
             <property name="my:ocr">
-               <type>d:content</type>
+               <type>d:text</type>
                <mandatory>false</mandatory>
                <index enabled="true">
                   <atomic>true</atomic>
@@ -101,10 +101,24 @@
 
       <aspect name="my:rente">
          <title>Rentenrelevante Dokumente</title>
+         <properties>
+            <property name="my:isRente">
+               <title>relevant for rente</title>
+               <type>d:boolean</type>
+               <default>true</default>
+            </property>
+         </properties>
       </aspect>
 
       <aspect name="my:wichtig">
          <title>Wichtige Dokumente</title>
+         <properties>
+            <property name="my:isImportant">
+               <title>important document</title>
+               <type>d:boolean</type>
+               <default>true</default>
+            </property>
+         </properties>
       </aspect>
 
    </aspects>

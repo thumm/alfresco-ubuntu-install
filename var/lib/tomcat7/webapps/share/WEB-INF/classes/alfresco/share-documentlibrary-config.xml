@@ -1253,6 +1253,7 @@
          <actionGroup id="empty"/>
 
          <actionGroup id="document-browse">
+            <action index="90" id="document-manage-aspects" />
             <action index="100" id="document-download" />
             <action index="110" id="document-view-content" />
             <action index="120" id="document-locate" />
