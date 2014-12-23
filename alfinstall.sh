@@ -27,14 +27,14 @@ export LOCALESUPPORT=de_DE.utf8
 export JDBCPOSTGRESURL=http://jdbc.postgresql.org/download
 export JDBCPOSTGRES=postgresql-9.3-1102.jdbc41.jar
 
-export LIBREOFFICE=http://download.documentfoundation.org/libreoffice/stable/4.2.7/deb/x86_64/LibreOffice_4.2.7_Linux_x86-64_deb.tar.gz
+export LIBREOFFICE=http://download.documentfoundation.org/libreoffice/stable/4.2.8/deb/x86_64/LibreOffice_4.2.8_Linux_x86-64_deb.tar.gz
 export SWFTOOLS=http://www.swftools.org/swftools-2013-04-09-1007.tar.gz
 
-export ALFWARZIP=http://dl.alfresco.com/release/community/5.0.b-build-00092/alfresco-community-5.0.b.zip
-export GOOGLEDOCSREPO=http://dl.alfresco.com/release/community/5.0.b-build-00092/alfresco-googledocs-repo-2.0.8.amp
-export GOOGLEDOCSSHARE=http://dl.alfresco.com/release/community/5.0.b-build-00092/alfresco-googledocs-share-2.0.8.amp
-export SOLR=https://artifacts.alfresco.com/nexus/service/local/repo_groups/public/content/org/alfresco/alfresco-solr/5.0.b/alfresco-solr-5.0.b-config.zip
-export SPP=https://artifacts.alfresco.com/nexus/service/local/repo_groups/public/content/org/alfresco/alfresco-spp/5.0.b/alfresco-spp-5.0.b.amp
+export ALFWARZIP=http://dl.alfresco.com/release/community/5.0.c-build-00145/alfresco-community-5.0.c.zip
+export GOOGLEDOCSREPO=http://dl.alfresco.com/release/community/5.0.c-build-00145/alfresco-googledocs-repo-2.0.8.amp
+export GOOGLEDOCSSHARE=http://dl.alfresco.com/release/community/5.0.c-build-00145/alfresco-googledocs-share-2.0.8.amp
+export SOLR=https://artifacts.alfresco.com/nexus/content/groups/public/org/alfresco/alfresco-solr4/5.0.c/alfresco-solr4-5.0.c-config.zip
+export SPP=https://artifacts.alfresco.com/nexus/content/groups/public/org/alfresco/alfresco-spp/5.0.c/alfresco-spp-5.0.c.amp
 
 # Color variables
 txtund=$(tput sgr 0 1)          # Underline
