@@ -467,38 +467,40 @@ echoblue "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 read -e -p "Install Solr indexing engine${ques} [y/n] " -i "n" installsolr
 if [ "$installsolr" = "y" ]; then
 
-  sudo mkdir -p $ALF_HOME/solr
-  sudo curl -# -o $ALF_HOME/solr/solr.zip $SOLR
-  sudo cp $ALF_HOME/addons/war/apache-solr-1.4.1.war $ALF_HOME/solr/apache-solr-1.4.1.war
-  cd $ALF_HOME/solr/
+  sudo mkdir -p $ALF_HOME/solr4
+  sudo curl -# -o $ALF_HOME/solr4/solr.zip $SOLR
+  sudo cp $ALF_HOME/addons/war/solr4.war $ALF_HOME/solr4/solr4.war
+  cd $ALF_HOME/solr4/
 
   sudo unzip -q -o solr.zip
   # Set the solr data path
-  SOLRDATAPATH="$ALF_HOME/alf_data/solr"
+  SOLRDATAPATH="$ALF_HOME/alf_data/solr4"
   # Escape for sed
   SOLRDATAPATH="${SOLRDATAPATH//\//\\/}"
 
-  sudo mv $ALF_HOME/solr/workspace-SpacesStore/conf/solrcore.properties $ALF_HOME/solr/workspace-SpacesStore/conf/solrcore.properties.orig
-  sudo mv $ALF_HOME/solr/archive-SpacesStore/conf/solrcore.properties $ALF_HOME/solr/archive-SpacesStore/conf/solrcore.properties.orig
-  sed "s/@@ALFRESCO_SOLR_DIR@@/$SOLRDATAPATH/g" $ALF_HOME/solr/workspace-SpacesStore/conf/solrcore.properties.orig > /tmp/alfrescoinstall/solrcore.properties
-  sudo mv /tmp/alfrescoinstall/solrcore.properties $ALF_HOME/solr/workspace-SpacesStore/conf/solrcore.properties
-  sed "s/@@ALFRESCO_SOLR_DIR@@/$SOLRDATAPATH/g" $ALF_HOME/solr/archive-SpacesStore/conf/solrcore.properties.orig > /tmp/alfrescoinstall/solrcore.properties
-  sudo mv /tmp/alfrescoinstall/solrcore.properties $ALF_HOME/solr/archive-SpacesStore/conf/solrcore.properties
-  SOLRDATAPATH="$ALF_HOME/solr"
+  sudo mv $ALF_HOME/solr4/workspace-SpacesStore/conf/solrcore.properties $ALF_HOME/solr4/workspace-SpacesStore/conf/solrcore.properties.orig
+  sudo mv $ALF_HOME/solr4/archive-SpacesStore/conf/solrcore.properties $ALF_HOME/solr4/archive-SpacesStore/conf/solrcore.properties.orig
+  sed "s/@@ALFRESCO_SOLR_DIR@@/$SOLRDATAPATH/g" $ALF_HOME/solr4/workspace-SpacesStore/conf/solrcore.properties.orig > /tmp/alfrescoinstall/solrcore.properties
+  sudo mv /tmp/alfrescoinstall/solrcore.properties $ALF_HOME/solr4/workspace-SpacesStore/conf/solrcore.properties
+  sed "s/@@ALFRESCO_SOLR_DIR@@/$SOLRDATAPATH/g" $ALF_HOME/solr4/archive-SpacesStore/conf/solrcore.properties.orig > /tmp/alfrescoinstall/solrcore.properties
+  sudo mv /tmp/alfrescoinstall/solrcore.properties $ALF_HOME/solr4/archive-SpacesStore/conf/solrcore.properties
+  SOLRDATAPATH="$ALF_HOME/solr4"
 
   cd $SCRIPT_DIR
-  sudo cp -a opt/alfresco/solr /opt/alfresco
+  sudo cp -a opt/alfresco/solr4 /opt/alfresco
 
-  echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>" > /tmp/alfrescoinstall/solr.xml
-  echo "<Context docBase=\"$ALF_HOME/solr/apache-solr-1.4.1.war\" debug=\"0\" crossContext=\"true\">" >> /tmp/alfrescoinstall/solr.xml
-  echo "  <Environment name=\"solr/home\" type=\"java.lang.String\" value=\"$ALF_HOME/solr\" override=\"true\"/>" >> /tmp/alfrescoinstall/solr.xml
-  echo "</Context>" >> /tmp/alfrescoinstall/solr.xml
-  sudo mv /tmp/alfrescoinstall/solr.xml $CATALINA_BASE/conf/Catalina/alfresco.zuhause.xx/solr.xml
+  echo "<?xml version="1.0" encoding="utf-8"?>" > /tmp/alfrescoinstall/solr4.xml
+  echo "<Context docBase=\"$ALF_HOME/solr4/solr4.war\" debug=\"0\" crossContext=\"true\">" >> /tmp/alfrescoinstall/solr4.xml
+  echo "  <Environment name=\"solr/home\"        type=\"java.lang.String\" value=\"$ALF_HOME/solr4\" override=\"true\"/>" >> /tmp/alfrescoinstall/solr4.xml
+  echo "  <Environment name=\"solr/model/dir\"   type=\"java.lang.String\" value=\"$ALF_LIB/solr4/model\" override=\"true\"/>" >> /tmp/alfrescoinstall/solr4.xml
+  echo "  <Environment name=\"solr/content/dir\" type=\"java.lang.String\" value=\"$ALF_LIB/solr4/content\" override=\"true\"/>" >> /tmp/alfrescoinstall/solr4.xml
+  echo "</Context>" >> /tmp/alfrescoinstall/solr4.xml
+  sudo mv /tmp/alfrescoinstall/solr4.xml $CATALINA_BASE/conf/Catalina/alfresco.zuhause.xx/solr4.xml
 
   echo
   echogreen "Finished installing Solr engine."
   echored "You must manually update alfresco-global.properties."
-  echo "Set property value index.subsystem.name=solr"
+  echo "Set property value index.subsystem.name=solr4"
   echo
 else
   echo
